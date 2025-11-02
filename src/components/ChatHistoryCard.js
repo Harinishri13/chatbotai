@@ -1,6 +1,6 @@
-import { Box, Typography, Stack, Divider, Chip } from "@mui/material";
+import { Box, Typography, Stack } from "@mui/material";
 import { format, isEqual, startOfDay, add } from "date-fns";
-import ChattingCard from "../components/ChattingCard";
+import ChattingCard from "./ChattingCard";
 
 export default function ChatHistoryCard({ details }) {
   const formatDate = (date) => {
@@ -15,16 +15,22 @@ export default function ChatHistoryCard({ details }) {
     }
   };
 
+  const conversationDate = details.time ? new Date(details.time) : new Date();
+
   return (
     <Box>
       <Typography fontWeight={400} mb={2}>
-        {formatDate(startOfDay(new Date(details.datetime)))}
+        {formatDate(startOfDay(conversationDate))}
       </Typography>
 
       <Stack spacing={{ xs: 2, md: 3 }}>
-        {details.chat.map((item, index) => (
-          <ChattingCard details={item} readOnly={true} key={index} />
-        ))}
+        {details.chat && details.chat.length > 0 ? (
+          details.chat.map((item, index) => (
+            <ChattingCard details={item} readOnly={true} key={index} />
+          ))
+        ) : (
+          <Typography>No messages in this conversation.</Typography>
+        )}
       </Stack>
     </Box>
   );

@@ -1,6 +1,6 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import InitialChat from "../components/InitialChat";
-import ChatInput from "../components//ChatInput";
+import ChatInput from "../components/ChatInput";
 import ChattingCard from "../components/ChattingCard";
 import FeedbackModal from "../components/FeedbackModal";
 import { useEffect, useRef, useState } from "react";
@@ -19,9 +19,18 @@ export default function Home() {
   const { chat, setChat } = useOutletContext();
   const { mode } = useContext(ThemeContext);
 
-  // GENERATING AI RESPONSE
+  // Save each conversation as {time, chat: []} in localStorage
+  useEffect(() => {
+    if (chat.length > 0) {
+      const conversations = [
+        { time: chat[0].time, chat: chat.map((c) => ({ ...c })) },
+      ];
+      localStorage.setItem("chatHistory", JSON.stringify(conversations));
+    }
+  }, [chat]);
+
   const generateResponse = (input) => {
-    if (!input || input.trim() === "") return; // ignore empty input
+    if (!input || input.trim() === "") return;
 
     const sanitizedInput = input.trim().toLowerCase();
 
@@ -33,44 +42,33 @@ export default function Home() {
       ? response.response
       : "Sorry, Did not understand your query!";
 
-    setChat((prev) => [
-      ...prev,
-      {
-        type: "Human",
-        text: input,
-        time: new Date(),
-        id: chatId,
-      },
-      {
-        type: "AI",
-        text: answer,
-        time: new Date(),
-        id: chatId + 1,
-      },
-    ]);
+    const newMessages = [
+      { type: "Human", text: input, time: new Date(), id: chatId },
+      { type: "AI", text: answer, time: new Date(), id: chatId + 1 },
+    ];
 
+    setChat((prev) => [...prev, ...newMessages]);
     setChatId((prev) => prev + 2);
   };
 
-  //AUTOSCROLL TO LAST ELEMENT
   useEffect(() => {
-    listRef.current?.lastElementChild?.scrollIntoView();
-  }, [scrollToBottom]);
+    listRef.current?.lastElementChild?.scrollIntoView({ behavior: "smooth" });
+  }, [scrollToBottom, chat]);
 
   return (
     <Stack
-      height={"100vh"}
-      justifyContent={"space-between"}
+      height="100vh"
+      justifyContent="space-between"
       sx={{
         "@media (max-width:767px)": {
           background:
-            mode == "light" ? "linear-gradient(#F9FAFA 60%, #EDE4FF)" : "",
+            mode === "light" ? "linear-gradient(#F9FAFA 60%, #EDE4FF)" : "",
         },
       }}
     >
       <Navbar />
 
-      {chat.length == 0 && <InitialChat generateResponse={generateResponse} />}
+      {chat.length === 0 && <InitialChat generateResponse={generateResponse} />}
 
       {chat.length > 0 && (
         <Stack
@@ -80,9 +78,7 @@ export default function Home() {
           spacing={{ xs: 2, md: 3 }}
           sx={{
             overflowY: "auto",
-            "&::-webkit-scrollbar": {
-              width: "10px",
-            },
+            "&::-webkit-scrollbar": { width: "10px" },
             "&::-webkit-scrollbar-track": {
               boxShadow: "inset 0 0 8px rgba(0,0,0,0.1)",
               borderRadius: "8px",

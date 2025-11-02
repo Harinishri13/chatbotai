@@ -8,11 +8,13 @@ export default function History() {
   const [chats, setChats] = useState([]);
   const [filteredChats, setFilteredChats] = useState([]);
 
-  // Load saved chats from localStorage on mount
   useEffect(() => {
-    const localChats = localStorage.getItem("chatHistory"); // use same key as Home.js
+    const localChats = localStorage.getItem("chatHistory");
     if (localChats) {
-      const parsedChats = JSON.parse(localChats);
+      const parsedChats = JSON.parse(localChats).map((conv) => ({
+        ...conv,
+        time: new Date(conv.time), // convert string back to Date
+      }));
       setChats(parsedChats);
       setFilteredChats(parsedChats);
     }
@@ -41,12 +43,10 @@ export default function History() {
           Conversation History
         </Typography>
 
-        {/* Show filter only if there are chats */}
         {chats.length > 0 && (
           <ChatFilter allChats={chats} filterChats={setFilteredChats} />
         )}
 
-        {/* No saved chats */}
         {chats.length === 0 && (
           <Typography
             textAlign="center"
@@ -58,7 +58,6 @@ export default function History() {
           </Typography>
         )}
 
-        {/* Filter applied but no chats */}
         {chats.length > 0 && filteredChats.length === 0 && (
           <Typography
             textAlign="center"
@@ -70,7 +69,6 @@ export default function History() {
           </Typography>
         )}
 
-        {/* Display filtered chats */}
         {filteredChats.length > 0 && (
           <Stack
             spacing={4}
@@ -78,8 +76,8 @@ export default function History() {
               <Divider sx={{ borderColor: "primary.bg", opacity: 0.4 }} />
             }
           >
-            {filteredChats.map((item, index) => (
-              <ChatHistoryCard details={item} key={index} />
+            {filteredChats.map((conv, index) => (
+              <ChatHistoryCard details={conv} key={index} />
             ))}
           </Stack>
         )}
