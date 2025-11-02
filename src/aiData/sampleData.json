@@ -1,0 +1,40 @@
+[
+  {
+    "id": 1,
+    "user": "Soul AI",
+    "message": "Hello! How can I help you today?",
+    "timestamp": "2025-11-02T12:00:00Z",
+    "type": "default"
+  },
+  {
+    "id": 2,
+    "user": "User",
+    "message": "What is AI?",
+    "timestamp": "2025-11-02T12:01:00Z",
+    "type": "question",
+    "response": "AI stands for Artificial Intelligence, which allows machines to perform tasks that typically require human intelligence."
+  },
+  {
+    "id": 3,
+    "user": "User",
+    "message": "Who created you?",
+    "timestamp": "2025-11-02T12:02:00Z",
+    "type": "question",
+    "response": "I was created by developers to assist you with your queries."
+  },
+  {
+    "id": 4,
+    "user": "User",
+    "message": "Unknown question example",
+    "timestamp": "2025-11-02T12:03:00Z",
+    "type": "question",
+    "response": "Sorry, Did not understand your query!"
+  },
+  {
+    "id": 5,
+    "user": "Soul AI",
+    "message": "Remember, you can view all saved messages at the /history route.",
+    "timestamp": "2025-11-02T12:04:00Z",
+    "type": "info"
+  }
+]
