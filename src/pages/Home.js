@@ -21,15 +21,17 @@ export default function Home() {
 
   // GENERATING AI RESPONSE
   const generateResponse = (input) => {
+    if (!input || input.trim() === "") return; // ignore empty input
+
+    const sanitizedInput = input.trim().toLowerCase();
+
     const response = data.find(
-      (item) => input.toLowerCase() == item.question.toLowerCase()
+      (item) => item.question && item.question.toLowerCase() === sanitizedInput
     );
 
-    let answer = "Sorry, Did not understand your query!";
-
-    if (response != undefined) {
-      answer = response.response;
-    }
+    const answer = response
+      ? response.response
+      : "Sorry, Did not understand your query!";
 
     setChat((prev) => [
       ...prev,
