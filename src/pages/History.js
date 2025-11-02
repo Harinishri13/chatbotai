@@ -1,11 +1,4 @@
-import {
-  Typography,
-  Box,
-  Stack,
-  Divider,
-  Select,
-  MenuItem,
-} from "@mui/material";
+import { Typography, Box, Stack, Divider } from "@mui/material";
 import { useEffect, useState } from "react";
 import ChatHistoryCard from "../components/ChatHistoryCard";
 import ChatFilter from "../components/ChatFilter";
@@ -15,8 +8,9 @@ export default function History() {
   const [chats, setChats] = useState([]);
   const [filteredChats, setFilteredChats] = useState([]);
 
+  // Load saved chats from localStorage on mount
   useEffect(() => {
-    const localChats = localStorage.getItem("chatHistory"); // use correct key
+    const localChats = localStorage.getItem("chatHistory"); // use same key as Home.js
     if (localChats) {
       const parsedChats = JSON.parse(localChats);
       setChats(parsedChats);
@@ -26,13 +20,10 @@ export default function History() {
 
   return (
     <Box
-      height={"100vh"}
-      overflow={"hidden"}
+      height="100vh"
       sx={{
         overflowY: "auto",
-        "&::-webkit-scrollbar": {
-          width: "10px",
-        },
+        "&::-webkit-scrollbar": { width: "10px" },
         "&::-webkit-scrollbar-track": {
           boxShadow: "inset 0 0 8px rgba(0,0,0,0.1)",
           borderRadius: "8px",
@@ -46,36 +37,40 @@ export default function History() {
       <Navbar />
 
       <Box p={{ xs: 2, md: 3 }}>
-        <Typography variant="h2" textAlign={"center"} mb={3}>
+        <Typography variant="h2" textAlign="center" mb={3}>
           Conversation History
         </Typography>
 
+        {/* Show filter only if there are chats */}
         {chats.length > 0 && (
           <ChatFilter allChats={chats} filterChats={setFilteredChats} />
         )}
 
-        {chats.length == 0 && (
+        {/* No saved chats */}
+        {chats.length === 0 && (
           <Typography
-            textAlign={"center"}
+            textAlign="center"
             p={3}
-            bgcolor={"primary.light"}
+            bgcolor="primary.light"
             borderRadius={2}
           >
             No saved chats.
           </Typography>
         )}
 
-        {chats.length > 0 && filteredChats.length == 0 && (
+        {/* Filter applied but no chats */}
+        {chats.length > 0 && filteredChats.length === 0 && (
           <Typography
-            textAlign={"center"}
+            textAlign="center"
             p={3}
-            bgcolor={"primary.light"}
+            bgcolor="primary.light"
             borderRadius={2}
           >
             No such chats.
           </Typography>
         )}
 
+        {/* Display filtered chats */}
         {filteredChats.length > 0 && (
           <Stack
             spacing={4}
